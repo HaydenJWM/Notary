@@ -14,15 +14,20 @@ class Notary(App[str]):
     noteArea = None
     filename = None
 
-    def initFilename(self):
-        #If filename was given in the args use it
-        if(len(sys.argv) >= 2):
-            self.filename = sys.argv[1]
+    #Process command line arguments into variables/flags
+    #Current argument structure:
+    #   0: Program Name
+    #   1: Filename to open/save to
+    def processArguments(self, args):
+        if(len(args) <= 1):
+            return
+        
+        self.filename = args[1]
 
-
+    #Textual based function that acts as a constructor of sorts
     def compose(self) -> ComposeResult:
         self.noteArea = TextArea()
-        self.initFilename()
+        self.processArguments(sys.argv)
 
         yield Header()
         yield self.noteArea
@@ -30,8 +35,13 @@ class Notary(App[str]):
 
     def action_open(self) -> None:
         print("placeholder")
-    
+   
+    #Saves the current message contents
+    #NOTE: Currently requires a filename input from the CLI
+    #TODO: If filename is none type open an input widget and take a filename to use            
     def action_save(self) -> None:
+        if(self.filename == None):
+            return
         f = open(self.filename, "x")
         f.write(self.noteArea.text)
         f.close()
