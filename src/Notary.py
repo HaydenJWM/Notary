@@ -1,8 +1,13 @@
 import sys
-from textual import events
+from textual import events, work
 from textual.app import App, ComposeResult
 from textual.binding import Binding
-from textual.widgets import Header, TextArea, Footer 
+from textual.widgets import Header, TextArea, Footer, Input 
+from textual.screen import Screen, ModalScreen
+from SaveScreen import SaveScreen
+
+
+
 
 class Notary(App[str]):
     BINDINGS = [
@@ -39,9 +44,10 @@ class Notary(App[str]):
     #Saves the current message contents
     #NOTE: Currently requires a filename input from the CLI
     #TODO: If filename is none type open an input widget and take a filename to use            
-    def action_save(self) -> None:
+    @work
+    async def action_save(self) -> None:
         if(self.filename == None):
-            return
+            await self.push_screen_wait(SaveScreen())
         f = open(self.filename, "x")
         f.write(self.noteArea.text)
         f.close()
