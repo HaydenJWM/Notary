@@ -6,9 +6,6 @@ from textual.widgets import Header, TextArea, Footer, Input
 from textual.screen import Screen, ModalScreen
 from SaveScreen import SaveScreen
 
-
-
-
 class Notary(App[str]):
     BINDINGS = [
         Binding("ctrl+q", "quit", "Quit Notary"),
@@ -38,17 +35,19 @@ class Notary(App[str]):
         yield self.noteArea
         yield Footer()
 
+    #Opens a file for writing
     def action_open(self) -> None:
         print("placeholder")
    
-    #Saves the current message contents
-    #NOTE: Currently requires a filename input from the CLI
-    #TODO: If filename is none type open an input widget and take a filename to use            
+    #Saves the current file contents            
     @work
     async def action_save(self) -> None:
+        fileOp = "w"
         if(self.filename == None):
-            await self.push_screen_wait(SaveScreen())
-        f = open(self.filename, "x")
+            fileOp = "x"
+            self.filename = await self.push_screen_wait(SaveScreen())
+            
+        f = open(self.filename, fileOp)
         f.write(self.noteArea.text)
         f.close()
 
