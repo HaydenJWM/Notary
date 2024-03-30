@@ -40,13 +40,13 @@ class Notary(App[str]):
         print("placeholder")
    
     #Saves the current file contents            
+    #TODO: Check if file has been modified and save only if something has changed
     @work
     async def action_save(self) -> None:
         fileOp = "w"
+        #If filename was not given in the CLI, get a filename from the TUI
         if(self.filename == None):
-            fileOp = "x"
             self.filename = await self.push_screen_wait(SaveScreen())
-            
         f = open(self.filename, fileOp)
         f.write(self.noteArea.text)
         f.close()
