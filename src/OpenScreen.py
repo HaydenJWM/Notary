@@ -3,17 +3,17 @@ from textual.widgets import Input, Button
 from textual.screen import Screen
 from textual.app import ComposeResult, App
 
-#TODO: Add file extension validation. Add CSS. Add Header/Footer
-class SaveScreen(Screen[str]):
- 
+#TODO: Add file extension validation
+class OpenScreen(Screen[str]):
+   
     filenameInput = None
 
     def compose(self) -> ComposeResult:
         self.filenameInput = Input(placeholder="Filename:")
         yield self.filenameInput
-        yield Button("Save", id="save")
+        yield Button("Open", id="open")
 
-    @on(Button.Pressed, "#save")
+    @on(Button.Pressed, "#open")
     def handle_save(self) -> None:
-        self.dismiss(self.filenameInput.value)
-
+        if(self.filenameInput.value != None):
+            self.dismiss(self.filenameInput.value)

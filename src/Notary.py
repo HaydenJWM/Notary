@@ -1,10 +1,12 @@
 import sys
+from pathlib import Path
 from textual import events, work
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.widgets import Header, TextArea, Footer, Input 
 from textual.screen import Screen, ModalScreen
 from SaveScreen import SaveScreen
+from OpenScreen import OpenScreen
 
 class Notary(App[str]):
     BINDINGS = [
@@ -36,11 +38,16 @@ class Notary(App[str]):
         yield Footer()
 
     #Opens a file for writing
-    def action_open(self) -> None:
-        print("placeholder")
+    #TODO: Open file from data folder
+    @work
+    async def action_open(self) -> None:
+        #Open screen to get filename here
+        self.filename = await self.push_screen_wait(OpenScreen())
+        #Saving the filename in memory means that it will be either created or opened
+        #reagardless if it exists or not. Keep an eye on this area however.
    
     #Saves the current file contents            
-    #TODO: Check if file has been modified and save only if something has changed
+    #TODO: Save notes to data folder
     @work
     async def action_save(self) -> None:
         fileOp = "w"
