@@ -54,7 +54,7 @@ class Notary(App[str]):
         #If filename was not given in the CLI, get a filename from the TUI
         if(self.filename == None):
             self.filename = await self.push_screen_wait(SaveScreen())
-        f = open(self.filename, fileOp)
+        f = Path("data/"+self.filename).open(fileOp)
         f.write(self.noteArea.text)
         f.close()
 
