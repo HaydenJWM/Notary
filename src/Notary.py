@@ -27,6 +27,7 @@ class Notary(App[str]):
             return
         
         self.filename = args[1]
+        self.action_open()
 
     #Textual based function that acts as a constructor of sorts
     def compose(self) -> ComposeResult:
@@ -38,16 +39,19 @@ class Notary(App[str]):
         yield Footer()
 
     #Opens a file for writing
-    #TODO: Open file from data folder
     @work
     async def action_open(self) -> None:
         #Open screen to get filename here
-        self.filename = await self.push_screen_wait(OpenScreen())
-        #Saving the filename in memory means that it will be either created or opened
-        #reagardless if it exists or not. Keep an eye on this area however.
-   
-    #Saves the current file contents            
-    #TODO: Save notes to data folder
+        if(self.filename == None):
+            self.filename = await self.push_screen_wait(OpenScreen())
+
+        if(Path("data/"+self.filename).exists()):
+            f = Path("data/"+self.filename).open("r")
+            fileContents = f.read()
+            if(len(fileContents) != 0):
+                self.noteArea.text = fileContents
+
+    #Saves the current file contents
     @work
     async def action_save(self) -> None:
         fileOp = "w"
